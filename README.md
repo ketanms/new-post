@@ -92,11 +92,13 @@ function wpshed_meta_box_output( $post ) {
 		<textarea name="wpshed_textarea" id="wpshed_textarea" cols="60" rows="4"><?php echo wpshed_get_custom_field( 'wpshed_textarea' ); ?></textarea>
     </p>
     <p>
-		<label for="wpshed_textarea"><?php _e( 'Area Interest', 'wpshed' ); ?>:</label><br />
-		<input type="checkbox" name="wpshed_checkbox[]" id="wpshed_checkbox" value="<?php echo wpshed_get_custom_field( 'wpshed_checkbox' ); ?>" />development<br/>
-        <input type="checkbox" name="wpshed_checkbox[]" id="wpshed_checkbox" value="<?php echo wpshed_get_custom_field( 'wpshed_checkbox' ); ?>" />Designer<br/>
-        <input type="checkbox" name="wpshed_checkbox[]" id="wpshed_checkbox" value="<?php echo wpshed_get_custom_field( 'wpshed_checkbox' ); ?>" />Programmer<br/>
-        <input type="checkbox" name="wpshed_checkbox[]" id="wpshed_checkbox" value="<?php echo wpshed_get_custom_field( 'wpshed_checkbox' ); ?>" />Testing<br/>
+		<label for="area_interesrt"><?php _e( 'Area Interest', 'wpshed' ); ?>:</label><br />
+       
+		<input type="checkbox" name="area_interesrt[]"  id="area_interesrt" value="development" />development<br/>
+        <input type="checkbox" name="area_interesrt[]" id="area_interesrt" value="Designer" />Designer<br/>
+        <input type="checkbox" name="area_interesrt[]" id="area_interesrt" value="Programmer" />Programmer<br/>
+        <input type="checkbox" name="area_interesrt[]" id="area_interesrt" value="Testing" />Testing<br/>
+    
     </p>
     
 	<?php
@@ -108,6 +110,8 @@ function wpshed_meta_box_output( $post ) {
  */
 function wpshed_meta_box_save( $post_id ) {
 	// Stop the script when doing autosave
+	
+	
 	if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
 
 	// Verify the nonce. If insn't there, stop the script
@@ -128,8 +132,8 @@ function wpshed_meta_box_save( $post_id ) {
 		update_post_meta( $post_id, 'wpshed_textarea', esc_attr( $_POST['wpshed_textarea'] ) );
 		
 	// Save the textarea
-	if( isset( $_POST['wpshed_checkbox'] ) )
-		update_post_meta( $post_id,implode(',','wpshed_checkbox'), esc_attr( $_POST['wpshed_checkbox'] ) );	
+	$area_interest = implode(",",$_POST['area_interesrt']);
+		update_post_meta( $post_id,'area_interesrt', esc_attr( $area_interest ) );	
 }
 add_action( 'save_post', 'wpshed_meta_box_save' );
 
@@ -182,7 +186,7 @@ function gallery_shortcode_fn1()
 				 echo '<br><b>Address:</b>';
 				 echo get_post_meta( get_the_ID(), 'wpshed_textarea', true );
 				 echo '<br><b>Area Interest:</b>';
-				 echo get_post_meta( get_the_ID(), 'wpshed_checkbox', true );
+				 echo get_post_meta( get_the_ID(), 'area_interesrt', true );
             }
            
         }
