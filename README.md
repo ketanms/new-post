@@ -19,7 +19,7 @@ function create_posttype() {
  
             'public' => true,
             'menu_position' => 15,
-            'supports' => array( 'title', 'editor', 'comments', 'thumbnail', 'custom-fields' ),
+            'supports' => array( 'title', 'editor','thumbnail', 'custom-fields' ),
             'taxonomies' => array( '' ),
 			'register_meta_box_cb' => 'team_price_box',
             'has_archive' => true
@@ -84,20 +84,15 @@ function wpshed_meta_box_output( $post ) {
     </p>
 	<p>
 		<label for="team_areasize"><?php _e( 'Area Size', 'wpshed' ); ?>:</label>
-		<input type="text" name="team_areasize" id="team_areasize" value="<?php echo wpshed_get_custom_field( 'team_areasize' ); ?>" size="50" />
+		<input type="text" name="team_areasize" id="team_areasize" value="<?php echo wpshed_get_custom_field( 'team_areasize' ); ?>" size="25" />
     </p>
 	
 	<p>
-		<label for="wpshed_textarea"><?php _e( 'Textarea', 'wpshed' ); ?>:</label><br />
-		<textarea name="wpshed_textarea" id="wpshed_textarea" cols="60" rows="4"><?php echo wpshed_get_custom_field( 'wpshed_textarea' ); ?></textarea>
-    </p>
-    <p>
-		<label for="area_interesrt"><?php _e( 'Area Interest', 'wpshed' ); ?>:</label><br />
-       
-		<input type="checkbox" name="area_interesrt[]"  id="area_interesrt" value="development" />development<br/>
-        <input type="checkbox" name="area_interesrt[]" id="area_interesrt" value="Designer" />Designer<br/>
-        <input type="checkbox" name="area_interesrt[]" id="area_interesrt" value="Programmer" />Programmer<br/>
-        <input type="checkbox" name="area_interesrt[]" id="area_interesrt" value="Testing" />Testing<br/>
+		<label for="area_interest"><?php _e( 'Area Interest', 'wpshed' ); ?>:</label><br />
+        <input type="checkbox" name="area_interest[]"  id="area_interest" value="development" />development<br/>
+        <input type="checkbox" name="area_interest[]" id="area_interest" value="Designer" />Designer<br/>
+        <input type="checkbox" name="area_interest[]" id="area_interest" value="Programmer" />Programmer<br/>
+        <input type="checkbox" name="area_interest[]" id="area_interest" value="Testing" />Testing<br/>
     
     </p>
     
@@ -110,6 +105,7 @@ function wpshed_meta_box_output( $post ) {
  */
 function wpshed_meta_box_save( $post_id ) {
 	// Stop the script when doing autosave
+	
 	
 	
 	if( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) return;
@@ -126,29 +122,26 @@ function wpshed_meta_box_save( $post_id ) {
     // Save the textfield
 	if( isset( $_POST['team_areasize'] ) )
 		update_post_meta( $post_id, 'team_areasize', esc_attr( $_POST['team_areasize'] ) );
-
-    // Save the textarea
-	if( isset( $_POST['wpshed_textarea'] ) )
-		update_post_meta( $post_id, 'wpshed_textarea', esc_attr( $_POST['wpshed_textarea'] ) );
-		
+    	
 	// Save the textarea
-	$area_interest = implode(",",$_POST['area_interesrt']);
-		update_post_meta( $post_id,'area_interesrt', esc_attr( $area_interest ) );	
+	$area_interest = implode(",",$_POST['area_interest']);
+	
+		update_post_meta( $post_id,'area_interest', esc_attr( $area_interest ) );	
 }
 add_action( 'save_post', 'wpshed_meta_box_save' );
 
 
-function custom_metaboxes1() {
+function custom_metaboxes() {
 	    add_meta_box('gallery_shortcode_info', 'Shortcode info', 'gallery_shortcode_fn1', 'team', 'side');
 }
-add_action('add_meta_boxes','custom_metaboxes1');
+add_action('add_meta_boxes','custom_metaboxes');
 
 function gallery_shortcode_fn1()
 {
 	global $post;
 	
 ?>
-	<input type="text" name="shrtcode" value="[zoomGallery1 id='<?php echo $post->ID; ?>']" readonly="readonly"/>
+	<input type="text" name="shrtcode" value="[TestShortcode id='<?php echo $post->ID; ?>']" readonly="readonly"/>
     
 <?php 
 		
@@ -156,7 +149,7 @@ function gallery_shortcode_fn1()
 
 
 
-    add_shortcode( 'zoomGallery1', 'display_custom_post_type' );
+    add_shortcode( 'TestShortcode', 'display_custom_post_type' );
 
     function display_custom_post_type(){
         $args = array(
@@ -183,13 +176,12 @@ function gallery_shortcode_fn1()
 				 echo $userinfo->user_login;
 				 echo '<br><b>Area Size:</b>';
 				 echo get_post_meta( get_the_ID(), 'team_areasize', true );
-				 echo '<br><b>Address:</b>';
-				 echo get_post_meta( get_the_ID(), 'wpshed_textarea', true );
 				 echo '<br><b>Area Interest:</b>';
-				 echo get_post_meta( get_the_ID(), 'area_interesrt', true );
+				 echo get_post_meta( get_the_ID(), 'area_interest', true );
             }
            
         }
         wp_reset_postdata();
       }
+
 
